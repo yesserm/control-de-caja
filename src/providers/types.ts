@@ -1,4 +1,4 @@
-import type { Caja, Entrada, Nominacion, Retiro, User } from '../types/models';
+import type { Caja, CompanySettings, Entrada, Nominacion, Retiro, User } from '../types/models';
 
 export type DataProviderName = 'json' | 'sqlite' | 'firebase';
 export type NewCaja = Omit<Caja, 'id'>;
@@ -8,8 +8,13 @@ export type NewEntrada = Omit<Entrada, 'id'>;
 
 export interface DataProvider {
   authenticate(email: string, password: string): Promise<User | null>;
+  authenticateWithGoogle(idToken: string): Promise<User>;
   logout(): Promise<void>;
-  getCajaAbierta(): Promise<Caja | null>;
+  getCajaAbierta(user?: User): Promise<Caja | null>;
+  getUsers(): Promise<User[]>;
+  getCompanySettings(): Promise<CompanySettings>;
+  updateCompanyName(name: string): Promise<CompanySettings>;
+  updateUserRole(userId: string, role: User['role']): Promise<User>;
   getNominaciones(cajaId: string): Promise<Nominacion[]>;
   abrirCaja(caja: NewCaja): Promise<Caja>;
   cerrarCaja(cajaId: string, changes: Pick<Caja, 'fechaCierre' | 'usuarioCierreId' | 'estado'>): Promise<Caja>;

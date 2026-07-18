@@ -1,4 +1,4 @@
-import type { Caja, Entrada, Nominacion, Retiro, User } from '../types/models';
+import type { Caja, CompanySettings, Entrada, Nominacion, Retiro, User } from '../types/models';
 import { request } from '../services/api';
 import type { DataProvider } from './types';
 
@@ -15,8 +15,13 @@ export const jsonProvider: DataProvider = {
     const users = await request<JsonUser[]>(`/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
     return users[0] ? withoutPassword(users[0]) : null;
   },
+  async authenticateWithGoogle() { throw new Error('El inicio con Google está disponible cuando EXPO_PUBLIC_DATA_PROVIDER=firebase.'); },
   async logout() {},
-  async getCajaAbierta() { const result = (await request<Caja[]>('/cajas?estado=abierta'))[0]; return result ? caja(result) : null; },
+  async getCajaAbierta(user) { const values = (await request<Caja[]>('/cajas?estado=abierta')).map(caja); return values.find((value) => user?.role === 'admin' || value.usuarioAsignadoId === user?.id) ?? null; },
+  async getUsers() { return (await request<JsonUser[]>('/users')).map(withoutPassword); },
+  async getCompanySettings() { const value = await request<CompanySettings[]>('/settings'); return value[0] ?? { empresaNombre: 'Parada Caribe' }; },
+  async updateCompanyName(empresaNombre) { const settings = await this.getCompanySettings(); return request<CompanySettings>('/settings/1', { method: 'PATCH', body: JSON.stringify({ ...settings, empresaNombre }) }); },
+  async updateUserRole(id, role) { return withoutPassword(await request<JsonUser>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify({ role }) })); },
   async getNominaciones(cajaId) { return (await request<Nominacion[]>(`/nominaciones?cajaId=${encodeURIComponent(cajaId)}`)).map(nominacion); },
   async abrirCaja(value) { return caja(await request<Caja>('/cajas', { method: 'POST', body: JSON.stringify(value) })); },
   async cerrarCaja(id, changes) { return caja(await request<Caja>(`/cajas/${id}`, { method: 'PATCH', body: JSON.stringify(changes) })); },

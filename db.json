@@ -5,14 +5,16 @@
       "email": "admin@caja.local",
       "password": "1234",
       "name": "Administrador",
-      "role": "admin"
+      "role": "admin",
+      "empresaNombre": "Parada Caribe"
     },
     {
       "id": "2",
       "email": "cajero@caja.local",
       "password": "1234",
       "name": "Cajero",
-      "role": "user"
+      "role": "user",
+      "empresaNombre": "Parada Caribe"
     }
   ],
   "cajas": [
@@ -22,6 +24,8 @@
       "fechaCierre": "2026-07-18T22:09:49.141Z",
       "usuarioInicioId": "1",
       "usuarioCierreId": "1",
+      "usuarioAsignadoId": "2",
+      "montoInicial": 1000,
       "estado": "cerrada"
     },
     {
@@ -30,6 +34,8 @@
       "fechaCierre": "2026-07-17T17:00:00.000Z",
       "usuarioInicioId": "2",
       "usuarioCierreId": "2",
+      "usuarioAsignadoId": "2",
+      "montoInicial": 500,
       "estado": "cerrada"
     },
     {
@@ -37,6 +43,8 @@
       "fechaCierre": null,
       "usuarioInicioId": "1",
       "usuarioCierreId": null,
+      "usuarioAsignadoId": "2",
+      "montoInicial": 1000,
       "estado": "abierta",
       "id": "3"
     }
@@ -66,6 +74,9 @@
       "fecha": "2026-07-18T10:30:00.000Z",
       "usuarioId": "1"
     }
+  ],
+  "settings": [
+    { "id": "1", "empresaNombre": "Parada Caribe" }
   ],
   "entradas": [
     {

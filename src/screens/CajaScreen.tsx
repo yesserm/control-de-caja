@@ -16,7 +16,7 @@ export function CajaScreen({ navigation }: Props) {
   const { user, logout } = useContext(AuthContext);
   const client = useQueryClient();
   const [edited, setEdited] = useState<Record<number, string>>({});
-  const cajaQuery = useQuery({ queryKey: ['caja-abierta'], queryFn: getCajaAbierta });
+  const cajaQuery = useQuery({ queryKey: ['caja-abierta', user?.id], queryFn: () => getCajaAbierta(user ?? undefined) });
   const caja = cajaQuery.data;
   const nominacionesQuery = useQuery({ queryKey: ['nominaciones', caja?.id], queryFn: () => getNominaciones(caja!.id), enabled: Boolean(caja) });
   const nominaciones = nominacionesQuery.data ?? [];
