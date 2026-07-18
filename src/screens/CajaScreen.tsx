@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useContext, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { Button } from '../components/Button';
@@ -10,9 +11,8 @@ import { abrirCaja, cerrarCaja, getCajaAbierta, getNominaciones, saveNominacion 
 import type { RootStackParamList } from '../types/navigation';
 import { currency, DENOMINACIONES, toQuantity, totalNominaciones } from '../utils/caja';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Caja'>;
-
-export function CajaScreen({ navigation }: Props) {
+export function CajaScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { user, logout } = useContext(AuthContext);
   const client = useQueryClient();
   const [edited, setEdited] = useState<Record<number, string>>({});
