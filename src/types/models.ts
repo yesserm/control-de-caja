@@ -6,3 +6,5 @@ export interface Caja { id: string; fechaInicio: string; fechaCierre: string | n
 export interface Nominacion { id: string; cajaId: string; denominacion: number; cantidad: number; subtotal: number; }
 export interface Retiro { id: string; cajaId: string; monto: number; concepto: string; fecha: string; usuarioId: string; }
 export interface Entrada extends Retiro { turno: 'AM' | 'PM'; }
+export type HistoryKind = 'cajas' | 'entradas' | 'retiros' | 'nominaciones';
+export type HistoryItem = Caja | Entrada | Retiro | Nominacion;

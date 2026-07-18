@@ -1,4 +1,4 @@
-import type { Caja, CompanySettings, Entrada, Nominacion, Retiro, User } from '../types/models';
+import type { Caja, CompanySettings, Entrada, HistoryItem, HistoryKind, Nominacion, Retiro, User } from '../types/models';
 import { request } from '../services/api';
 import type { DataProvider } from './types';
 
@@ -22,6 +22,7 @@ export const jsonProvider: DataProvider = {
   async getCompanySettings() { const value = await request<CompanySettings[]>('/settings'); return value[0] ?? { empresaNombre: 'Parada Caribe' }; },
   async updateCompanyName(empresaNombre) { const settings = await this.getCompanySettings(); return request<CompanySettings>('/settings/1', { method: 'PATCH', body: JSON.stringify({ ...settings, empresaNombre }) }); },
   async updateUserRole(id, role) { return withoutPassword(await request<JsonUser>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify({ role }) })); },
+  async getHistory(kind: HistoryKind): Promise<HistoryItem[]> { return request<HistoryItem[]>(`/${kind}`); },
   async getNominaciones(cajaId) { return (await request<Nominacion[]>(`/nominaciones?cajaId=${encodeURIComponent(cajaId)}`)).map(nominacion); },
   async abrirCaja(value) { return caja(await request<Caja>('/cajas', { method: 'POST', body: JSON.stringify(value) })); },
   async cerrarCaja(id, changes) { return caja(await request<Caja>(`/cajas/${id}`, { method: 'PATCH', body: JSON.stringify(changes) })); },

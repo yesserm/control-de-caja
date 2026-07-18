@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import type { Caja, CompanySettings, Entrada, Nominacion, Retiro, User } from '../types/models';
+import type { Caja, CompanySettings, Entrada, HistoryItem, HistoryKind, Nominacion, Retiro, User } from '../types/models';
 import type { DataProvider } from './types';
 
 let databasePromise: Promise<SQLite.SQLiteDatabase> | undefined;
@@ -46,6 +46,7 @@ export const sqliteProvider: DataProvider = {
   async getCompanySettings() { return (await (await database()).getFirstAsync<CompanySettings>('SELECT empresaNombre FROM settings WHERE id = ?', '1')) ?? { empresaNombre: 'Parada Caribe' }; },
   async updateCompanyName(empresaNombre) { const db = await database(); await db.runAsync('UPDATE settings SET empresaNombre = ? WHERE id = ?', empresaNombre, '1'); await db.runAsync('UPDATE users SET empresaNombre = ?', empresaNombre); return { empresaNombre }; },
   async updateUserRole(id, role) { const db = await database(); await db.runAsync('UPDATE users SET role = ? WHERE id = ?', role, id); return (await db.getFirstAsync<User>('SELECT id, email, name, role, empresaNombre FROM users WHERE id = ?', id))!; },
+  async getHistory(kind: HistoryKind): Promise<HistoryItem[]> { return (await (await database()).getAllAsync(`SELECT * FROM ${kind}`)) as HistoryItem[]; },
   async getNominaciones(cajaId) { return (await database()).getAllAsync<Nominacion>('SELECT * FROM nominaciones WHERE cajaId = ?', cajaId); },
   async abrirCaja(caja) { const id = makeId('caja'); await (await database()).runAsync('INSERT INTO cajas VALUES (?, ?, ?, ?, ?, ?, ?, ?)', id, caja.fechaInicio, caja.fechaCierre, caja.usuarioInicioId, caja.usuarioCierreId, caja.usuarioAsignadoId, caja.montoInicial, caja.estado); return { id, ...caja }; },
   async cerrarCaja(id, changes) { const db = await database(); await db.runAsync('UPDATE cajas SET fechaCierre = ?, usuarioCierreId = ?, estado = ? WHERE id = ?', changes.fechaCierre, changes.usuarioCierreId, changes.estado, id); return (await db.getFirstAsync<Caja>('SELECT * FROM cajas WHERE id = ?', id))!; },

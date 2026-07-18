@@ -1,7 +1,7 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth, inMemoryPersistence, initializeAuth, signInWithCredential, signInWithEmailAndPassword, signOut, type Auth, type User as FirebaseUser } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where, writeBatch, type Firestore, type QueryConstraint } from 'firebase/firestore';
-import type { Caja, CompanySettings, Entrada, Nominacion, Retiro, User } from '../types/models';
+import type { Caja, CompanySettings, Entrada, HistoryItem, HistoryKind, Nominacion, Retiro, User } from '../types/models';
 import type { DataProvider } from './types';
 
 const DEFAULT_COMPANY: CompanySettings = { empresaNombre: 'Parada Caribe' };
@@ -86,6 +86,7 @@ export const firebaseProvider: DataProvider = {
     const saved = await getDoc(doc(db, 'users', id));
     return toUser(id, saved.data() ?? {}, String(saved.data()?.email ?? ''));
   },
+  async getHistory(kind: HistoryKind): Promise<HistoryItem[]> { const snapshot = await getDocs(collection(services().db, kind)); return snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as HistoryItem)); },
   async getNominaciones(cajaId) { return documents<Nominacion>(services().db, 'nominaciones', [where('cajaId', '==', cajaId)]); },
   async abrirCaja(caja) { const created = await addDoc(collection(services().db, 'cajas'), caja); return { id: created.id, ...caja }; },
   async cerrarCaja(id, changes) { const { db } = services(); await updateDoc(doc(db, 'cajas', id), changes); return { id, ...(await getDoc(doc(db, 'cajas', id))).data() } as Caja; },

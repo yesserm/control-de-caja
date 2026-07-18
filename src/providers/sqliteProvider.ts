@@ -11,6 +11,7 @@ export const sqliteProvider: DataProvider = {
   getCompanySettings: async () => unavailable(),
   updateCompanyName: async () => unavailable(),
   updateUserRole: async () => unavailable(),
+  getHistory: async () => unavailable(),
   getNominaciones: async () => unavailable(),
   abrirCaja: async () => unavailable(),
   cerrarCaja: async () => unavailable(),
