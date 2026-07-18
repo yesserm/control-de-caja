@@ -6,7 +6,7 @@ service cloud.firestore {
     function admin() { return signedIn() && profile().data.role == 'admin'; }
     function assigned(cajaId) { return admin() || get(/databases/$(database)/documents/cajas/$(cajaId)).data.usuarioAsignadoId == request.auth.uid; }
 
-    match /settings/general { allow read: if signedIn(); allow write: if admin(); }
+    match /settings/general { allow read: if true; allow write: if admin(); }
     match /users/{userId} {
       allow read: if signedIn() && (admin() || request.auth.uid == userId);
       allow create: if signedIn() && request.auth.uid == userId && request.resource.data.role == 'user';
