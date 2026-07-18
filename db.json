@@ -1,0 +1,90 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "1234",
+      "name": "Administrador",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "username": "cajero",
+      "password": "1234",
+      "name": "Cajero",
+      "role": "user"
+    }
+  ],
+  "cajas": [
+    {
+      "id": 1,
+      "fechaInicio": "2026-07-18T08:00:00.000Z",
+      "fechaCierre": "2026-07-18T22:09:49.141Z",
+      "usuarioInicioId": 1,
+      "usuarioCierreId": 1,
+      "estado": "cerrada"
+    },
+    {
+      "id": 2,
+      "fechaInicio": "2026-07-17T08:00:00.000Z",
+      "fechaCierre": "2026-07-17T17:00:00.000Z",
+      "usuarioInicioId": 2,
+      "usuarioCierreId": 2,
+      "estado": "cerrada"
+    },
+    {
+      "fechaInicio": "2026-07-18T22:09:59.407Z",
+      "fechaCierre": null,
+      "usuarioInicioId": 1,
+      "usuarioCierreId": null,
+      "estado": "abierta",
+      "id": 3
+    }
+  ],
+  "nominaciones": [
+    {
+      "id": 1,
+      "cajaId": 1,
+      "denominacion": 100,
+      "cantidad": 5,
+      "subtotal": 500
+    },
+    {
+      "id": 2,
+      "cajaId": 1,
+      "denominacion": 500,
+      "cantidad": 3,
+      "subtotal": 1500
+    }
+  ],
+  "retiros": [
+    {
+      "id": 1,
+      "cajaId": 1,
+      "monto": 250,
+      "concepto": "Compras de insumos",
+      "fecha": "2026-07-18T10:30:00.000Z",
+      "usuarioId": 1
+    }
+  ],
+  "entradas": [
+    {
+      "id": 1,
+      "cajaId": 1,
+      "monto": 500,
+      "concepto": "Ventas de mañana",
+      "turno": "AM",
+      "fecha": "2026-07-18T09:15:00.000Z",
+      "usuarioId": 1
+    },
+    {
+      "id": 2,
+      "cajaId": 1,
+      "monto": 750,
+      "concepto": "Ventas de tarde",
+      "turno": "PM",
+      "fecha": "2026-07-18T15:30:00.000Z",
+      "usuarioId": 2
+    }
+  ]
+}

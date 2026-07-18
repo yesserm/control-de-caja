@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# Control de caja
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación Expo SDK 54 para controlar apertura/cierre de caja, nominaciones de
+billetes y movimientos de efectivo. Usa React Navigation Native Stack,
+NativeWind (Tailwind CSS v3), TanStack Query y json-server.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Instalación
 
 ```bash
-npm run reset-project
+npm install
+Copy-Item .env.example .env.local
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Edita `.env.local` con una URL accesible desde tu dispositivo. Para Expo Go en
+un teléfono conectado a la misma Wi-Fi, usa la IP LAN del equipo, por ejemplo
+`http://192.168.0.108:3005`; no uses `localhost` ni `127.0.0.1`. Las variables
+`EXPO_PUBLIC_*` se incluyen en el cliente; no coloques secretos.
 
-## Learn more
+## Ejecutar
 
-To learn more about developing your project with Expo, look at the following resources:
+En una terminal inicia el backend simulado:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm run api
+```
 
-## Join the community
+En otra terminal inicia Expo:
 
-Join our community of developers creating universal apps.
+```bash
+npm start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Después de cambiar `EXPO_PUBLIC_API_URL`, reinicia Expo limpiando la caché y
+recarga la aplicación:
+
+```bash
+npx expo start -c
+```
+
+Para probar Expo Go, el teléfono y el equipo deben compartir la misma red
+Wi-Fi. Si el teléfono no alcanza `http://192.168.0.108:3005/users`, permite
+Node.js/json-server en el Firewall de Windows para redes privadas.
+
+Usa `npm run android` o `npm run ios` para abrir el emulador/simulador.
+Credenciales de prueba: `admin` / `1234` o `cajero` / `1234`.
+
+## Validación
+
+```bash
+npm run lint
+npm test
+```
+
+Consulta `AGENTS.md` y los documentos en `docs/` antes de modificar la
+arquitectura, API, diseño o módulos de negocio.
