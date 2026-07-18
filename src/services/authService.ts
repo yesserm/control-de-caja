@@ -1,7 +1,4 @@
-import type { User } from '../types/models';
-import { request } from './api';
+import { dataProvider } from '../providers/provider';
 
-export async function authenticate(username: string, password: string) {
-  const users = await request<User[]>(`/users?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
-  return users[0] ?? null;
-}
+export const authenticate = (email: string, password: string) => dataProvider.authenticate(email, password);
+export const logoutRemote = () => dataProvider.logout();

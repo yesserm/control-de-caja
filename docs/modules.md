@@ -2,8 +2,8 @@
 
 ## Authentication
 
-Login accepts username and password, rejects empty fields, then queries
-`users`. On success it stores the full user in `AuthContext` and navigates to
+Login accepts email and password, rejects empty fields, then calls the active
+data provider. On success it stores the full user in `AuthContext` and navigates to
 Caja. On failure it preserves the entered values and shows a clear error.
 
 ## Caja

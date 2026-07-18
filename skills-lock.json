@@ -1,6 +1,24 @@
 {
   "version": 1,
   "skills": {
+    "firebase-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-basics/SKILL.md",
+      "computedHash": "6c40f96765c945a406244f2f020133c7cf4e7857be055f7420e2f9465e5b1e7e"
+    },
+    "firebase-firestore": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-firestore/SKILL.md",
+      "computedHash": "7fb6533c63627fc0ec0f6bab00d641ce0050eed823925d61a9a40545061646ee"
+    },
+    "firebase-security-rules-auditor": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-security-rules-auditor/SKILL.md",
+      "computedHash": "0ef93a495615c8fb4db2458e526897a9e7e58c7efca4fdb76564a0962fef5d43"
+    },
     "no-use-effect": {
       "source": "factory-ai/factory-plugins",
       "sourceType": "github",

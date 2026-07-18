@@ -9,11 +9,11 @@ import { Input } from '../components/Input';
 
 export function LoginScreen() {
   const { setUser } = useContext(AuthContext);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const login = useMutation({ mutationFn: () => authenticate(username.trim(), password), onSuccess: (user) => { if (user) setUser(user); else setError('Usuario o contraseña incorrectos.'); }, onError: (reason) => setError(reason instanceof Error ? reason.message : 'No se pudo iniciar sesión.') });
-  const handleLogin = () => { if (!hasRequiredFields(username, password)) { setError('Completa usuario y contraseña.'); return; } setError(''); login.mutate(); };
+  const login = useMutation({ mutationFn: () => authenticate(email.trim(), password), onSuccess: (user) => { if (user) setUser(user); else setError('Correo o contraseña incorrectos.'); }, onError: (reason) => setError(reason instanceof Error ? reason.message : 'No se pudo iniciar sesión.') });
+  const handleLogin = () => { if (!hasRequiredFields(email, password)) { setError('Completa correo y contraseña.'); return; } setError(''); login.mutate(); };
 
-  return <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 justify-center bg-slate-50 p-5"><View className="rounded-2xl border border-slate-200 bg-white p-5"><Text className={`mb-1 text-3xl text-slate-900 ${Platform.OS === 'android' ? 'font-medium' : 'font-semibold'}`}>Control de caja</Text><Text className="mb-6 text-slate-500">Ingresa con tu usuario para operar la caja.</Text><Input label="Usuario" value={username} onChangeText={setUsername} autoCapitalize="none" autoCorrect={false} placeholder="admin" /><Input label="Contraseña" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••" />{error ? <Text className="mb-3 text-sm text-red-600">{error}</Text> : null}<Button title="Iniciar sesión" onPress={handleLogin} loading={login.isPending} /></View></KeyboardAvoidingView>;
+  return <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 justify-center bg-slate-50 p-5"><View className="rounded-2xl border border-slate-200 bg-white p-5"><Text className={`mb-1 text-3xl text-slate-900 ${Platform.OS === 'android' ? 'font-medium' : 'font-semibold'}`}>Control de caja</Text><Text className="mb-6 text-slate-500">Ingresa con tu correo para operar la caja.</Text><Input label="Correo" value={email} onChangeText={setEmail} autoCapitalize="none" autoCorrect={false} keyboardType="email-address" placeholder="admin@caja.local" /><Input label="Contraseña" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••" />{error ? <Text className="mb-3 text-sm text-red-600">{error}</Text> : null}<Button title="Iniciar sesión" onPress={handleLogin} loading={login.isPending} /></View></KeyboardAvoidingView>;
 }

@@ -17,7 +17,7 @@ computer's LAN IP (for example, `http://192.168.0.108:3005`), not localhost.
 
 | Resource | Required fields | Operations |
 | --- | --- | --- |
-| `users` | `id`, `username`, `password`, `name`, `role` | Query by username and password for simulated login. |
+| `users` | `id`, `email`, `password`, `name`, `role` | JSON/SQLite test login by email and password. |
 | `cajas` | `id`, `fechaInicio`, `fechaCierre`, `usuarioInicioId`, `usuarioCierreId`, `estado` | List open caja, create opening, patch closing. |
 | `nominaciones` | `id`, `cajaId`, `denominacion`, `cantidad`, `subtotal` | List by caja; create or patch each denomination. |
 | `retiros` | `id`, `cajaId`, `monto`, `concepto`, `fecha`, `usuarioId` | List and create withdrawals. |
@@ -25,8 +25,9 @@ computer's LAN IP (for example, `http://192.168.0.108:3005`), not localhost.
 
 ## Request behavior
 
-Authenticate with `GET /users?username={username}&password={password}`. An
-empty result is an invalid login. Query open registers with
+In JSON mode authenticate with `GET /users?email={email}&password={password}`.
+Firebase mode uses Firebase Authentication and retrieves the matching profile
+from `users/{uid}`. An empty result is an invalid test login. Query open registers with
 `GET /cajas?estado=abierta`; mutations use `POST` to create and `PATCH /:id`
 to update existing records.
 

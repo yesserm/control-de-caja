@@ -19,8 +19,9 @@ queries and mutations. Services are the only layer that knows HTTP endpoints.
 
 `AuthContext` owns the in-memory authenticated user. It exposes login and
 logout operations but deliberately does not restore a session after an app
-restart. TanStack Query owns server data and invalidates the affected caja or
-movement queries after a successful mutation.
+restart. `DataProvider` selects JSON Server, native SQLite, or Firebase from
+`EXPO_PUBLIC_DATA_PROVIDER`; screens never call a backend directly. TanStack
+Query owns server data and invalidates affected queries after mutations.
 
 Never call `useEffect` directly. Use queries for server reads, derived values
 for totals, and event handlers for user-triggered actions.

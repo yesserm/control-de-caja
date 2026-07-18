@@ -2,7 +2,8 @@
 
 Aplicación Expo SDK 54 para controlar apertura/cierre de caja, nominaciones de
 billetes y movimientos de efectivo. Usa React Navigation Native Stack,
-NativeWind (Tailwind CSS v3), TanStack Query y json-server.
+NativeWind (Tailwind CSS v3), TanStack Query y proveedores JSON, SQLite o
+Firebase.
 
 ## Instalación
 
@@ -42,7 +43,23 @@ Wi-Fi. Si el teléfono no alcanza `http://192.168.0.108:3005/users`, permite
 Node.js/json-server en el Firewall de Windows para redes privadas.
 
 Usa `npm run android` o `npm run ios` para abrir el emulador/simulador.
-Credenciales de prueba: `admin` / `1234` o `cajero` / `1234`.
+Credenciales JSON/SQLite de prueba: `admin@caja.local` / `1234` o
+`cajero@caja.local` / `1234`.
+
+## Proveedores de datos
+
+Configura `EXPO_PUBLIC_DATA_PROVIDER` en `.env.local` y reinicia Expo:
+
+- `json`: modo predeterminado para web; ejecuta `npm run api`.
+- `sqlite`: modo persistente local para Android/iOS y Expo Go. No está
+  disponible en web.
+- `firebase`: producción/remoto. Crea un proyecto Firebase, registra una app
+  web, habilita **Email/Password** en Authentication, crea Cloud Firestore y
+  completa las variables `EXPO_PUBLIC_FIREBASE_*` del archivo `.env.example`.
+
+Despliega [firestore.rules](./firestore.rules) en Firestore antes de permitir
+usuarios de producción. La configuración Firebase es pública por diseño, pero
+las reglas Firestore son obligatorias para proteger los datos.
 
 ## Validación
 

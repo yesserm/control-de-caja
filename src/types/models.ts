@@ -1,7 +1,7 @@
 export type UserRole = 'admin' | 'user';
 
-export interface User { id: number; username: string; password: string; name: string; role: UserRole; }
-export interface Caja { id: number; fechaInicio: string; fechaCierre: string | null; usuarioInicioId: number; usuarioCierreId: number | null; estado: 'abierta' | 'cerrada'; }
-export interface Nominacion { id: number; cajaId: number; denominacion: number; cantidad: number; subtotal: number; }
-export interface Retiro { id: number; cajaId: number; monto: number; concepto: string; fecha: string; usuarioId: number; }
+export interface User { id: string; email: string; name: string; role: UserRole; }
+export interface Caja { id: string; fechaInicio: string; fechaCierre: string | null; usuarioInicioId: string; usuarioCierreId: string | null; estado: 'abierta' | 'cerrada'; }
+export interface Nominacion { id: string; cajaId: string; denominacion: number; cantidad: number; subtotal: number; }
+export interface Retiro { id: string; cajaId: string; monto: number; concepto: string; fecha: string; usuarioId: string; }
 export interface Entrada extends Retiro { turno: 'AM' | 'PM'; }

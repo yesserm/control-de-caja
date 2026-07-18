@@ -1,1 +1,1 @@
-export type RootStackParamList = { Login: undefined; Caja: undefined; Movimientos: { cajaId: number }; };
+export type RootStackParamList = { Login: undefined; Caja: undefined; Movimientos: { cajaId: string }; };
