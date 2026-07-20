@@ -1,4 +1,4 @@
-import { toQuantity, totalNominaciones } from './caja';
+import { currency, toQuantity, totalNominaciones } from './caja';
 
 describe('nominaciones', () => {
   it('calcula el total a partir de subtotales', () => {
@@ -8,5 +8,9 @@ describe('nominaciones', () => {
   it('normaliza cantidades inválidas a cero', () => {
     expect(toQuantity('-2')).toBe(0);
     expect(toQuantity('3.8')).toBe(3);
+  });
+
+  it('muestra cero cuando falta un monto histórico', () => {
+    expect(currency(undefined)).toContain('0.00');
   });
 });

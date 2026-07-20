@@ -6,4 +6,7 @@ export const toQuantity = (value: string | undefined) => {
   return Number.isFinite(parsed) && parsed >= 0 ? Math.floor(parsed) : 0;
 };
 export const totalNominaciones = (items: Pick<Nominacion, 'subtotal'>[]) => items.reduce((total, item) => total + item.subtotal, 0);
-export const currency = (amount: number) => `C$ ${amount.toLocaleString('es-NI', { minimumFractionDigits: 2 })}`;
+export const currency = (amount: number | null | undefined) => {
+  const value = typeof amount === 'number' && Number.isFinite(amount) ? amount : 0;
+  return `C$ ${value.toLocaleString('es-NI', { minimumFractionDigits: 2 })}`;
+};
