@@ -1,8 +1,10 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
+import NetInfo from '@react-native-community/netinfo';
 import { GoogleAuthProvider, getAuth, inMemoryPersistence, initializeAuth, signInWithCredential, signInWithEmailAndPassword, signOut, type Auth, type User as FirebaseUser } from 'firebase/auth';
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where, writeBatch, type Firestore, type QueryConstraint } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where, writeBatch, type Firestore, type QueryConstraint } from 'firebase/firestore';
 import type { Caja, CompanySettings, Entrada, HistoryItem, HistoryKind, Nominacion, Retiro, User } from '../types/models';
 import type { DataProvider } from './types';
+import { enqueue, pendingOperations, removeOperation } from '../services/offlineQueue';
 
 const DEFAULT_COMPANY: CompanySettings = { empresaNombre: 'Parada Caribe' };
 const config = { apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY, authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN, projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID, storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET, messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID, appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID };
@@ -48,6 +50,24 @@ async function documents<T extends { id: string }>(db: Firestore, name: string, 
   return snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as T));
 }
 
+async function writeOrQueue<T>(collectionName: string, id: string, value: T, mode: 'create' | 'update') {
+  const { db } = services();
+  const payload = value as Record<string, unknown>;
+  try { if (mode === 'create') await setDoc(doc(db, collectionName, id), payload); else await updateDoc(doc(db, collectionName, id), payload); }
+  catch { await enqueue({ collection: collectionName, documentId: id, mode, payload: JSON.stringify(value) }); }
+}
+
+export async function flushOfflineQueue() {
+  const { db } = services();
+  for (const operation of await pendingOperations()) {
+    const reference = doc(db, operation.collection, operation.documentId!);
+    const payload = JSON.parse(operation.payload) as Record<string, unknown>;
+    if (operation.mode === 'create') await setDoc(reference, payload); else await updateDoc(reference, payload);
+    await removeOperation(operation.id);
+  }
+}
+NetInfo.addEventListener((state) => { if (state.isConnected && state.isInternetReachable !== false) void flushOfflineQueue().catch(() => undefined); });
+
 export const firebaseProvider: DataProvider = {
   async authenticate(email, password) {
     const { app, db } = services();
@@ -88,11 +108,11 @@ export const firebaseProvider: DataProvider = {
   },
   async getHistory(kind: HistoryKind): Promise<HistoryItem[]> { const snapshot = await getDocs(collection(services().db, kind)); return snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as HistoryItem)); },
   async getNominaciones(cajaId) { return documents<Nominacion>(services().db, 'nominaciones', [where('cajaId', '==', cajaId)]); },
-  async abrirCaja(caja) { const created = await addDoc(collection(services().db, 'cajas'), caja); return { id: created.id, ...caja }; },
-  async cerrarCaja(id, changes) { const { db } = services(); await updateDoc(doc(db, 'cajas', id), changes); return { id, ...(await getDoc(doc(db, 'cajas', id))).data() } as Caja; },
-  async saveNominacion(nominacion, id) { const { db } = services(); if (id) { await updateDoc(doc(db, 'nominaciones', id), nominacion); return { id, ...nominacion }; } const created = await addDoc(collection(db, 'nominaciones'), nominacion); return { id: created.id, ...nominacion }; },
+  async abrirCaja(caja) { const id = doc(collection(services().db, 'cajas')).id; await writeOrQueue('cajas', id, caja, 'create'); return { id, ...caja }; },
+  async cerrarCaja(id, changes) { await writeOrQueue('cajas', id, changes, 'update'); return { id, ...(await getDoc(doc(services().db, 'cajas', id))).data(), ...changes } as Caja; },
+  async saveNominacion(nominacion, id) { const savedId = id ?? doc(collection(services().db, 'nominaciones')).id; await writeOrQueue('nominaciones', savedId, nominacion, id ? 'update' : 'create'); return { id: savedId, ...nominacion }; },
   async getRetiros(cajaId) { return documents<Retiro>(services().db, 'retiros', [where('cajaId', '==', cajaId)]); },
   async getEntradas(cajaId) { return documents<Entrada>(services().db, 'entradas', [where('cajaId', '==', cajaId)]); },
-  async crearRetiro(retiro) { const created = await addDoc(collection(services().db, 'retiros'), retiro); return { id: created.id, ...retiro }; },
-  async crearEntrada(entrada) { const created = await addDoc(collection(services().db, 'entradas'), entrada); return { id: created.id, ...entrada }; },
+  async crearRetiro(retiro) { const id = doc(collection(services().db, 'retiros')).id; await writeOrQueue('retiros', id, retiro, 'create'); return { id, ...retiro }; },
+  async crearEntrada(entrada) { const id = doc(collection(services().db, 'entradas')).id; await writeOrQueue('entradas', id, entrada, 'create'); return { id, ...entrada }; },
 };
