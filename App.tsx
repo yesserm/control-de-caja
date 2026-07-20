@@ -11,6 +11,7 @@ import { LoginScreen } from './src/screens/LoginScreen';
 import { MovimientosScreen } from './src/screens/MovimientosScreen';
 import { HistorialScreen } from './src/screens/HistorialScreen';
 import { AjustesScreen } from './src/screens/AjustesScreen';
+import { ConnectivityStatus } from './src/components/ConnectivityStatus';
 import type { MainTabParamList, RootStackParamList } from './src/types/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -28,5 +29,5 @@ function RootNavigator() {
 }
 
 export default function App() {
-  return <QueryClientProvider client={queryClient}><AuthProvider><StatusBar style="dark" /><RootNavigator /></AuthProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><AuthProvider><StatusBar style="dark" /><ConnectivityStatus /><RootNavigator /></AuthProvider></QueryClientProvider>;
 }
