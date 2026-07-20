@@ -1,7 +1,8 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import NetInfo from '@react-native-community/netinfo';
+import { Platform } from 'react-native';
 import { GoogleAuthProvider, getAuth, inMemoryPersistence, initializeAuth, signInWithCredential, signInWithEmailAndPassword, signOut, type Auth, type User as FirebaseUser } from 'firebase/auth';
-import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where, writeBatch, type Firestore, type QueryConstraint } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, initializeFirestore, persistentLocalCache, persistentSingleTabManager, query, setDoc, updateDoc, where, writeBatch, type Firestore, type QueryConstraint } from 'firebase/firestore';
 import type { Caja, CompanySettings, Entrada, HistoryItem, HistoryKind, Nominacion, Retiro, User } from '../types/models';
 import type { DataProvider } from './types';
 import { enqueue, pendingOperations, removeOperation } from '../services/offlineQueue';
@@ -9,11 +10,18 @@ import { enqueue, pendingOperations, removeOperation } from '../services/offline
 const DEFAULT_COMPANY: CompanySettings = { empresaNombre: 'Parada Caribe' };
 const config = { apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY, authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN, projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID, storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET, messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID, appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID };
 let authInstance: Auth | undefined;
+let firestoreInstance: Firestore | undefined;
 
 function services(): { app: FirebaseApp; db: Firestore } {
   if (Object.values(config).some((value) => !value)) throw new Error('Configura todas las variables EXPO_PUBLIC_FIREBASE_* para usar Firebase.');
   const app = getApps().length ? getApp() : initializeApp(config);
-  return { app, db: getFirestore(app) };
+  if (!firestoreInstance) {
+    if (Platform.OS === 'web') {
+      try { firestoreInstance = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentSingleTabManager({}) }) }); }
+      catch { firestoreInstance = getFirestore(app); }
+    } else firestoreInstance = getFirestore(app);
+  }
+  return { app, db: firestoreInstance };
 }
 
 function firebaseAuth(app: FirebaseApp) {
