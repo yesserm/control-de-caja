@@ -61,6 +61,17 @@ Despliega [firestore.rules](./firestore.rules) en Firestore antes de permitir
 usuarios de producción. La configuración Firebase es pública por diseño, pero
 las reglas Firestore son obligatorias para proteger los datos.
 
+## Firebase, Google y trabajo sin conexión
+
+En Firebase habilita **Email/Password** y **Google**, y completa
+`EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`, `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` y
+`EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`. Registra las redirecciones de AuthSession
+para tu esquema `controldecaja` y para Expo Go durante desarrollo.
+
+En Android/iOS, los cambios de caja y movimientos que fallen se guardan en
+SQLite y se reintentan automáticamente al recuperar la red. En web se debe
+usar Firebase con un navegador compatible para habilitar persistencia IndexedDB.
+
 ## Validación
 
 ```bash

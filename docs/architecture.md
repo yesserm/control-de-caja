@@ -26,12 +26,18 @@ Query owns server data and invalidates affected queries after mutations.
 Never call `useEffect` directly. Use queries for server reads, derived values
 for totals, and event handlers for user-triggered actions.
 
-## Navigation
+## Navigation and roles
 
-The root stack contains `Login`, `Caja`, and `Movimientos`. Unauthenticated
-users can only reach Login. A valid login replaces Login with Caja. Caja opens
-Movimientos only when a cash register is open; returning preserves the current
-stack state.
+The root stack contains Login, Main and Movimientos. Main is a bottom-tab
+navigator: every user sees Caja; only admins receive Historial and Ajustes.
+An admin opens a caja with a positive initial amount and assigned cashier.
+
+## Offline behavior
+
+Native Firebase mutations use a SQLite `sync_queue` when Firestore is
+unreachable. NetInfo triggers an ordered retry after connectivity returns.
+The global connectivity banner informs users about offline operation. Do not
+use `useEffect`; connectivity uses `useSyncExternalStore`.
 
 ## Environment
 

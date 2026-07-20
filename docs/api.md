@@ -17,11 +17,12 @@ computer's LAN IP (for example, `http://192.168.0.108:3005`), not localhost.
 
 | Resource | Required fields | Operations |
 | --- | --- | --- |
-| `users` | `id`, `email`, `password`, `name`, `role` | JSON/SQLite test login by email and password. |
-| `cajas` | `id`, `fechaInicio`, `fechaCierre`, `usuarioInicioId`, `usuarioCierreId`, `estado` | List open caja, create opening, patch closing. |
+| `users` | `id`, `email`, `password`, `name`, `role`, `empresaNombre` | JSON/SQLite test login by email and password. |
+| `cajas` | `id`, `fechaInicio`, `fechaCierre`, `usuarioInicioId`, `usuarioCierreId`, `usuarioAsignadoId`, `montoInicial`, `estado` | List open caja, create opening, patch closing. |
 | `nominaciones` | `id`, `cajaId`, `denominacion`, `cantidad`, `subtotal` | List by caja; create or patch each denomination. |
 | `retiros` | `id`, `cajaId`, `monto`, `concepto`, `fecha`, `usuarioId` | List and create withdrawals. |
 | `entradas` | `id`, `cajaId`, `monto`, `concepto`, `turno`, `fecha`, `usuarioId` | List and create cash entries. |
+| `settings/general` | `empresaNombre` | Firebase global company name managed by admins. |
 
 ## Request behavior
 
