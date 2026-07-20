@@ -68,6 +68,17 @@ En Firebase habilita **Email/Password** y **Google**, y completa
 `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`. Registra las redirecciones de AuthSession
 para tu esquema `controldecaja` y para Expo Go durante desarrollo.
 
+Los clientes nativos deben usar exactamente estos identificadores de la app:
+
+- iOS bundle ID: `com.paradacaribe.controldecaja`.
+- Android package: `com.paradacaribe.controldecaja`.
+
+Registra ambas aplicaciones en Firebase y crea sus clientes OAuth
+correspondientes. En Android añade además la huella SHA-1 de la firma usada
+por tu build. Tras cambiar `app.json`, crea un development build para probar
+la autenticación nativa; Expo Go no sustituye la configuración OAuth de una
+app publicada.
+
 En Android/iOS, los cambios de caja y movimientos que fallen se guardan en
 SQLite y se reintentan automáticamente al recuperar la red. En web se debe
 usar Firebase con un navegador compatible para habilitar persistencia IndexedDB.
